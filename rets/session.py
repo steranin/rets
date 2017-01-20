@@ -122,7 +122,7 @@ class Session(object):
             self.add_capability(k, v)
 
         if self.capabilities.get('Action'):
-            self._request(self.capabilities['Action'])
+            self._request('Action')
         return True
 
     def logout(self):
