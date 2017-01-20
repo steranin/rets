@@ -178,6 +178,9 @@ class SessionTester(unittest.TestCase):
         with open('tests/rets_responses/Errors/Error_InvalidFormat.xml') as f:
             invalid_contents = ''.join(f.readlines())
 
+        with open('tests/rets_responses/COMPACT-DECODED/Search.xml') as f:
+            search_contents = ''.join(f.readlines())
+
         with responses.RequestsMock() as resps:
             resps.add(resps.POST, 'http://server.rets.com/rets/Search.ashx',
                       body=search_contents, status=200, stream=True)
@@ -207,6 +210,20 @@ class SessionTester(unittest.TestCase):
                                           optional_parameters={'Format': "Somecrazyformat"})
                 for r in res:
                     pass  # initiating the generator
+
+    def test_search_with_whitespace(self):
+
+        with open('tests/rets_responses/COMPACT-DECODED/Search_tabs.xml') as f:
+            search_contents = ''.join(f.readlines())
+
+        with responses.RequestsMock() as resps:
+            resps.add(resps.POST, 'http://server.rets.com/rets/Search.ashx',
+                      body=search_contents, status=200, stream=True)
+            results = self.session.search(resource='Property',
+                                          resource_class='RES',
+                                          search_filter={'ListingPrice': 200000})
+
+            self.assertEqual(len(list(results)), 5)
 
     def test_cache_metadata(self):
         with open('tests/rets_responses/COMPACT-DECODED/GetMetadata_table.xml') as f:
