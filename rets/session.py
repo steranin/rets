@@ -115,7 +115,7 @@ class Session(object):
         self.session_id = response.cookies.get('RETS-Session-ID', '')
 
         if parser.headers.get('RETS-Version') is not None:
-            self.version = str(parser.headers.get('RETS-Version')).strip('RETS/')
+            self.version = str(parser.headers.get('RETS-Version'))
             self.client.headers['RETS-Version'] = self.version
 
         for k, v in parser.capabilities.items():
